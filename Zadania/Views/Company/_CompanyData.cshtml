@@ -1,0 +1,24 @@
+﻿@using Zadania.Models
+@model Subject
+
+@{
+    Subject companyData = null;
+    if (Model != null)
+    {
+
+        companyData = Model;
+    }
+}
+
+
+
+
+<div>
+    <h2>Firma: @companyData.name</h2>
+    <h2>Siedziba: @companyData.residenceAddress</h2>
+    <h3>Nip: @companyData.nip</h3>
+    <h3>Regon: @companyData.regon</h3>
+    <h3>Status VAT: @companyData.statusVat</h3>
+    <h3>Data Rejestracji: @companyData.registrationLegalDate</h3>
+    
+</div>

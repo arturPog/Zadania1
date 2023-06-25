@@ -1,0 +1,106 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+<h1>Dane Firmy </h1>
+
+<div id="companyData"></div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+    <script type="text/babel">
+        class CompanyData extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    companys: [],
+                    residenceAddress: '',
+                    name: '',
+                    nip: '',
+                    regon: '',
+                    statusVat: '',
+                    registrationLegalDate: ''
+                   
+                };
+            }
+
+            componentDidMount() {
+                this.fetchTasks();
+            }
+
+            fetchTasks() {
+                fetch('/api/CompanyApi/GetCompany',{
+                  method: 'Get',
+                         headers: {
+                             'Content-Type': 'application/json'
+                         },
+                })
+                    .then(response => response.json())
+                    .then(data => this.setState({ companys: data }))
+                    .catch(error => console.error(error));
+            }
+
+            addCompany() {
+                 const {  nip } = this.state;
+               
+                const newNip = { nip: nip};
+
+                      fetch('/api/CompanyApi/AddCompany', {
+                        method: 'POST',
+                         headers: {
+                             'Content-Type': 'application/json'
+                         },
+                        body: JSON.stringify(newNip)
+                    })
+                        .then(() => {
+                            this.fetchTasks();
+                            this.setState({ nip: '' });
+                        })
+                        .catch(error => console.error(error));
+            }
+
+
+            handleTaskChange(event) {
+                  
+                this.setState({ nip: event.target.value });
+                
+            }
+
+            render() {
+                const { companys, nip } = this.state;
+                //alert("currentTask: "+currentTask);
+                return (
+                    <div>
+                        <div class="input-group mb-3">
+                           
+                            <input class="form-control" placeholder="Nip" type="text" id="nip" name="nip" value={nip} onChange={this.handleTaskChange.bind(this)} />
+                           <button class="btn btn-outline-secondary pobierz" onClick={this.addCompany.bind(this)}>Pobierz</button>
+                        </div>
+                        
+                        <div>
+                            <h2>Dane Firmy:</h2>
+                          
+                                {companys.map((company, index) => (
+                                    <div key={index}>
+                                         <h2>Firma: {company.name}</h2>
+                                        <h2>Siedziba: {company.residenceAddress}</h2>
+                                        <h3>Nip: {company.nip}</h3>
+                                        <h3>Regon: {company.regon}</h3>
+                                        <h3>Status VAT: {company.statusVat}</h3>
+                                        <h3>Data Rejestracji: {company.registrationLegalDate}</h3>
+                                    </div>
+                                    
+                                ))}
+                           
+                        </div>
+                      
+                    </div>
+                );
+            }
+        }
+
+        ReactDOM.render(<CompanyData />, document.getElementById('companyData'));
+    </script>
+}

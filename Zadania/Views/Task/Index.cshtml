@@ -1,0 +1,100 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+<h1>Pomiar czasu Zadania</h1>
+
+<div id="taskTracker"></div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+    <script type="text/babel">
+        class TaskTracker extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    tasks: [],
+                    currentTask: '',
+                    startTime: null
+                };
+            }
+
+            componentDidMount() {
+                this.fetchTasks();
+            }
+
+            fetchTasks() {
+                fetch('/api/TaskApi/GetTask',{
+                  method: 'Get',
+                         headers: {
+                             'Content-Type': 'application/json'
+                         },
+                })
+                    .then(response => response.json())
+                    .then(data => this.setState({ tasks: data }))
+                    .catch(error => console.error(error));
+            }
+
+            startTask() {
+                this.setState({ startTime: Date.now() });
+            }
+
+            stopTask() {
+                const { currentTask, startTime } = this.state;
+                if (startTime) {
+                    const endTime = Date.now();
+                    const taskDuration = ((endTime - startTime) / 1000).toFixed(2);
+
+                    const newTask = { Name: currentTask, Duration: taskDuration};// ,StartTime:startTime,EndTime:endTime
+
+                    //alert("endTime: "+endTime+" startTime: "+startTime+" taskDuration: "+taskDuration+ " currentTask: "+currentTask);
+                    fetch('/api/TaskApi/AddTask', {
+                        method: 'POST',
+                         headers: {
+                             'Content-Type': 'application/json'
+                         },
+                        body: JSON.stringify(newTask)
+                    })
+                        .then(() => {
+                            this.fetchTasks();
+                            this.setState({ currentTask: '', startTime: null });
+                        })
+                        .catch(error => console.error(error));
+                }
+            }
+
+            handleTaskChange(event) {
+              
+                this.setState({ currentTask: event.target.value });
+            }
+
+            render() {
+                const { tasks, currentTask, startTime } = this.state;
+                //alert("currentTask: "+currentTask);
+                return (
+                    <div>
+                        <div>
+                            <label htmlFor="taskName">Nazwa zadania:</label>
+                            <input type="text" id="taskName" value={currentTask} onChange={this.handleTaskChange.bind(this)} />
+                            {startTime
+                                ? <button onClick={this.stopTask.bind(this)}>Stop</button>
+                                : <button onClick={this.startTask.bind(this)}>Start</button>}
+                        </div>
+                        <div>
+                            <h2>Ukończone zadania:</h2>
+                            <ul>
+                                {tasks.map((task, index) => (
+                                    <li key={index}>{task.name} - Czas trwania: {task.duration} sekund</li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                );
+            }
+        }
+
+        ReactDOM.render(<TaskTracker />, document.getElementById('taskTracker'));
+    </script>
+}

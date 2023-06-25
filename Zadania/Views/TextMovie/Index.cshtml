@@ -1,0 +1,136 @@
+﻿@using Zadania.Models
+@model ReturnMovieFilesVM
+@{
+    Layout = "_Layout";
+
+    ReturnMovieFilesVM returnMovieFilesVM = null;
+    List<MovieText> movieTextsList = new List<MovieText>();
+    MovieText movieText = new MovieText();
+    if (Model != null)
+    {
+        returnMovieFilesVM = Model;
+        if (Model.MovieTextsList != null && Model.MovieTextsList.Count() > 0)
+        {
+
+            movieTextsList = Model.MovieTextsList;
+        }
+        if (Model.MovieText != null)
+        {
+
+            movieText = Model.MovieText;
+        }
+    }
+
+}
+
+<h1>Pobieranie pliku</h1>
+<br>
+<p>
+    opis: pobieramy plik z dysku i klikamy wyślij pliki wynikowe zapisuję się w katalogu głównym witryny wwwroot/files plik oryginalny zapisyje się w katalogu wwwroot/fileOrigingl każdorazowo zapisujemy operację do bazy danych i wyświetlamy listę wszystkich pobranych plików, które możemy podglądnąć zgodnie z opisem w tabeli. jeżeli nie wybierzemy pliku a klikniemy wyślij to program pobierze plik oryginalny z dysku (plik podany przez Państwa do zadania)   
+</p>
+<br>
+@if (returnMovieFilesVM != null && returnMovieFilesVM.IsFirst)
+{
+    <form method="post" enctype="multipart/form-data">
+       @* <div>
+            <label for="file">Wybierz plik:</label>
+            <input type="file" id="file" name="file" />
+        </div>
+        <button type="submit">Wyślij</button>*@
+
+        <div class="input-group">
+            <input type="file" class="form-control" id="file" name="file" aria-describedby="inputGroupFileAddon04" aria-label="Wybierz plik">
+            <button class="btn btn-outline-secondary" type="submit" >Wyślij</button>
+        </div>
+
+    </form>
+
+    <h2>Lista zmienionych plików z Bazy Danych</h2>
+    <table class="table table-bordered">
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Data</th>
+            <th scope="col">
+                Url pliku orginalnego
+            </th>
+            <th scope="col">
+                Url  1 pliku wynikowego
+            </th>
+            <th scope="col">
+                Url  2 pliku wynikowego
+            </th>
+        </tr>
+        @foreach (var item in movieTextsList)
+        {
+            <tr>
+                <th scope="row">
+                    @item.Id
+                </th>
+                <td>
+                    @item.DateCreated
+                </td>
+                <td>
+                    @item.TextOriginalUrl<br><br>
+                    <a href="@Url.Action("GetFile", "TextMovie", new { id = @item.Id, which = 1 })" target="_blank">Podgląd pliky</a>
+                </td>
+                <td>
+                    @item.TextUpdate1Url<br><br>
+                    <a href="@Url.Action("GetFile", "TextMovie", new { id = @item.Id, which = 2 })" target="_blank">Podgląd pliky</a>
+                </td>
+                <td>
+                    @item.TextUpdate2Url<br><br>
+                    <a href="@Url.Action("GetFile", "TextMovie", new { id = @item.Id, which = 3 })" target="_blank">Podgląd pliky</a>
+                </td>
+            </tr>
+        }
+    </table>
+}else
+{
+        <h2>Lista zmienionych plików z Bazy Danych</h2>
+    <table class="table table-bordered">
+            <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Data</th>
+            <th scope="col">
+                    Url pliku orginalnego
+                </th>
+            <th scope="col">
+                    Url  1 pliku wynikowego
+                </th>
+            <th scope="col">
+                    Url  2 pliku wynikowego
+                </th>
+            </tr>
+        @foreach (var item in movieTextsList)
+        {
+            <tr>
+                <th scope="row">
+                    @item.Id
+                </th>
+                <td>
+                    @item.DateCreated
+                </td>
+                <td>
+                    @item.TextOriginalUrl<br><br>
+                    <a href="@Url.Action("GetFile", "TextMovie", new { id = @item.Id, which = 1 })" target="_blank">Podgląd pliky</a>
+                </td>
+                <td>
+                    @item.TextUpdate1Url<br><br>
+                    <a href="@Url.Action("GetFile", "TextMovie", new { id = @item.Id, which = 2 })" target="_blank">Podgląd pliky</a>
+                </td>
+                <td>
+                    @item.TextUpdate2Url<br><br>
+                    <a href="@Url.Action("GetFile", "TextMovie", new { id = @item.Id, which = 3 })" target="_blank">Podgląd pliky</a>
+                </td>
+            </tr>
+        }
+        </table>
+}
+
+
+@if (!string.IsNullOrEmpty(ViewBag.Message))
+{
+    <div>
+        <p>@ViewBag.Message</p>
+    </div>
+}

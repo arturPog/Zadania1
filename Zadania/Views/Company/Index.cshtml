@@ -1,0 +1,23 @@
+﻿
+@model Subject
+@{
+}
+
+
+@section Css {
+
+}
+<input type="hidden" class="pobierzUrlHidden" id="pobierzUrlHidden" value="" data-url='@Url.Action("LoadCompanyDataAjax", "Company")' />
+
+
+<div class="input-group mb-3">
+    <input type="text" class="form-control nip" id="nip" placeholder="Nip" aria-label="Recipient's username" aria-describedby="button-addon2">
+    <button class="btn btn-outline-secondary pobierz" type="button" id="pobierz">Pobierz</button>
+</div>
+
+<div id="companyData"></div>
+
+@section Scripts {
+    <script src="~/js/companyData.js" asp-append-version="true"></script>
+   
+}
