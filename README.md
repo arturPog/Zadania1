@@ -6,13 +6,11 @@
     <p>
         Wyjaśnienie dlaczego zadanie nr.1 jest w dwóch wersjach:
 </p>
-  <p>
-        Zadanie 1 zostało pierwotnie wykonane używając ajax(a), ponieważ nigdy nie pracowałem z ReactJs, ale w związku z tym, iż zwracacie Państwo szczególną uwagę na ten Framework (dwa zadania) postanowiłem się go nauczyć.
+ <p>
+     Zadanie 1 zostało pierwotnie wykonane używając ajax(a), ponieważ nigdy nie pracowałem z ReactJs, ale w związku z tym, iż zwracacie Państwo szczególną uwagę na ten Framework (dwa zadania) postanowiłem się go nauczyć.
         Niestety nie miałem na to zbyt wiele czasu więc mój kod React nie jest idealny niemniej spełnia wymogi zadania. 
+ </p>
         
-        pozdrawiam
         
-        Artur Pogorzelski
-       (48) 666 108 805
-    </p>
+        
 </div>
